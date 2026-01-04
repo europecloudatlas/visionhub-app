@@ -16,11 +16,19 @@ class Settings(BaseSettings):
     database_url: str = "postgresql://visionhub:visionhub123@localhost:5432/visionhub"
     
     # S3/MinIO
-    s3_endpoint: str = "http://localhost:9000"
+    s3_endpoint: str = "http://minio:9000"
     s3_access_key: str = "minioadmin"
     s3_secret_key: str = "minioadmin"
     s3_bucket: str = "visionhub"
+    s3_public_url: str = "" 
     
+    @property
+    def s3_url_for_images(self) -> str:
+        """URL to use in image_url field (public-accessible)"""
+        if self.s3_public_url:
+            return self.s3_public_url
+        return self.s3_endpoint
+            
     class Config:
         env_file = ".env"
         case_sensitive = False

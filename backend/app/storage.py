@@ -35,27 +35,26 @@ def upload_image(file, original_filename: str) -> tuple:
     ext = os.path.splitext(original_filename)[1].lower()
     filename = f"{uuid.uuid4()}{ext}"
     
+    content_type_map = {
+        '.jpg': 'image/jpeg',
+        '.jpeg': 'image/jpeg',
+        '.png': 'image/png',
+        '.gif': 'image/gif',
+        '.webp': 'image/webp'
+    }
+    
     try:
-        content_type_map = {
-            '.jpg': 'image/jpeg',
-            '.jpeg': 'image/jpeg',
-            '.png': 'image/png',
-            '.gif': 'image/gif',
-            '.webp': 'image/webp'
-        }
-        content_type = content_type_map.get(ext, 'image/jpeg')
-        
         s3_client.upload_fileobj(
             file,
             settings.s3_bucket,
             filename,
             ExtraArgs={
-                'ContentType': content_type,
+                'ContentType': content_type_map.get(ext, 'image/jpeg'),
                 'ACL': 'public-read'
             }
         )
         
-        image_url = f"{settings.s3_endpoint}/{settings.s3_bucket}/{filename}"
+        image_url = f"{settings.s3_url_for_images}/{settings.s3_bucket}/{filename}"
         
         print(f"Uploaded image: {filename}")
         return image_url, filename

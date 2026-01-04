@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VisionHub - Personal Vision Board</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Loading Spinner -->
+    <div id="loading" class="loading hidden">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Auth Section (Login/Register) -->
+    <div id="auth-section" class="auth-section">
+        <div class="auth-container">
+            <h1>✨ VisionHub</h1>
+            <p class="tagline">Create Your Vision, Manifest Your Dreams</p>
+
+            <!-- Toggle between Login/Register -->
+            <div class="auth-toggle">
+                <button id="show-login" class="active">Login</button>
+                <button id="show-register">Register</button>
+            </div>
+
+            <!-- Login Form -->
+            <form id="login-form" class="auth-form">
+                <h2>Welcome Back</h2>
+                <input 
+                    type="text" 
+                    id="login-username" 
+                    placeholder="Username" 
+                    required
+                    autocomplete="username"
+                >
+                <input 
+                    type="password" 
+                    id="login-password" 
+                    placeholder="Password" 
+                    required
+                    autocomplete="current-password"
+                >
+                <button type="submit">Login</button>
+                <div id="login-error" class="error-message hidden"></div>
+            </form>
+
+            <!-- Register Form -->
+            <form id="register-form" class="auth-form hidden">
+                <h2>Create Account</h2>
+                <input 
+                    type="text" 
+                    id="register-username" 
+                    placeholder="Username (3-50 characters)" 
+                    required
+                    minlength="3"
+                    maxlength="50"
+                    autocomplete="username"
+                >
+                <input 
+                    type="email" 
+                    id="register-email" 
+                    placeholder="Email" 
+                    required
+                    autocomplete="email"
+                >
+                <input 
+                    type="password" 
+                    id="register-password" 
+                    placeholder="Password (min 6 characters)" 
+                    required
+                    minlength="6"
+                    autocomplete="new-password"
+                >
+                <button type="submit">Create Account</button>
+                <div id="register-error" class="error-message hidden"></div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Main App Section (After Login) -->
+    <div id="app-section" class="app-section hidden">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <h1>✨ VisionHub</h1>
+                <div class="header-actions">
+                    <span id="username-display" class="username"></span>
+                    <button id="logout-btn" class="btn-secondary">Logout</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Dashboard -->
+        <main class="main-content">
+            <!-- Create Board Section -->
+            <section class="create-board-section">
+                <h2>Create New Vision Board</h2>
+                <form id="create-board-form" class="create-board-form">
+                    <input 
+                        type="text" 
+                        id="board-name" 
+                        placeholder="Board name (e.g., 2025 Goals)" 
+                        required
+                        maxlength="200"
+                    >
+                    <textarea 
+                        id="board-description" 
+                        placeholder="Description (optional)" 
+                        rows="2"
+                    ></textarea>
+                    <button type="submit" class="btn-primary">Create Board</button>
+                </form>
+            </section>
+
+            <!-- Boards List -->
+            <section class="boards-section">
+                <h2>My Vision Boards</h2>
+                <div id="boards-container" class="boards-grid">
+                    <!-- Boards will be loaded here -->
+                    <p class="loading-text">Loading your boards...</p>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Board Detail Modal -->
+    <div id="board-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-board-name">Board Name</h2>
+                <button id="close-modal" class="close-btn">&times;</button>
+            </div>
+
+            <div class="modal-body">
+                <!-- Upload Image Section -->
+                <div class="upload-section">
+                    <h3>Add Image</h3>
+                    <form id="upload-form" class="upload-form">
+                        <input 
+                            type="file" 
+                            id="image-file" 
+                            accept="image/*" 
+                            required
+                        >
+                        <button type="submit" class="btn-primary">Upload</button>
+                    </form>
+                </div>
+
+                <!-- Images Grid -->
+                <div class="images-section">
+                    <h3>Images</h3>
+                    <div id="images-container" class="images-grid">
+                        <!-- Images will be loaded here -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button id="delete-board-btn" class="btn-danger">Delete Board</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
