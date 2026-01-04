@@ -8,16 +8,21 @@ env/
 venv/
 .venv/
 ENV/
+build/
+dist/
 *.egg-info/
 
 # Environment
 .env
 .env.local
+*.env
+!*.env.example
 
 # IDE
 .vscode/
 .idea/
 *.swp
+*.swo
 .DS_Store
 
 # Database
@@ -29,3 +34,20 @@ ENV/
 
 # Docker
 docker-compose.override.yml
+
+# Secrets
+*secret*.yaml
+*.key
+*.pem
+
+# Test files
+test-image*.jpg
+test*.jpg
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Thumbnails
+._*
