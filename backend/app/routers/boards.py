@@ -1,6 +1,3 @@
-"""
-Vision Board routes
-"""
 from fastapi import APIRouter, Depends, HTTPException, status, UploadFile, File
 from sqlalchemy.orm import Session
 from typing import List
@@ -19,17 +16,11 @@ from ..storage import upload_image, delete_image
 
 router = APIRouter(prefix="/boards", tags=["Vision Boards"])
 
-
-# ==========================================
-# BOARD CRUD
-# ==========================================
-
 @router.get("/", response_model=List[BoardListItem])
 def get_my_boards(
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
-    """Get all boards for current user"""
     boards = db.query(Board).filter(Board.user_id == current_user.id).all()
     
     return [
@@ -50,7 +41,6 @@ def get_board(
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
-    """Get board with all images"""
     board = db.query(Board).filter(
         Board.id == board_id,
         Board.user_id == current_user.id
@@ -71,7 +61,6 @@ def create_board(
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
-    """Create new vision board"""
     new_board = Board(
         user_id=current_user.id,
         name=board_data.name,
@@ -92,7 +81,6 @@ def update_board(
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
-    """Update board name/description"""
     board = db.query(Board).filter(
         Board.id == board_id,
         Board.user_id == current_user.id
@@ -121,7 +109,6 @@ def delete_board(
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
-    """Delete board and all images"""
     board = db.query(Board).filter(
         Board.id == board_id,
         Board.user_id == current_user.id
@@ -133,18 +120,11 @@ def delete_board(
             detail="Board not found"
         )
     
-    # Delete all images from S3
     for image in board.images:
         delete_image(image.filename)
     
-    # Delete board (cascade deletes images from DB)
     db.delete(board)
     db.commit()
-
-
-# ==========================================
-# IMAGE CRUD
-# ==========================================
 
 @router.post("/{board_id}/images", response_model=BoardImageResponse, status_code=status.HTTP_201_CREATED)
 async def upload_image_to_board(
@@ -153,8 +133,6 @@ async def upload_image_to_board(
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
-    """Upload image to board"""
-    # Verify board exists and belongs to user
     board = db.query(Board).filter(
         Board.id == board_id,
         Board.user_id == current_user.id
@@ -166,14 +144,12 @@ async def upload_image_to_board(
             detail="Board not found"
         )
     
-    # Validate file type
     if not file.content_type.startswith("image/"):
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="File must be an image"
         )
     
-    # Upload to S3
     try:
         image_url, filename = upload_image(file.file, file.filename)
     except Exception as e:
@@ -182,7 +158,6 @@ async def upload_image_to_board(
             detail=f"Failed to upload image: {str(e)}"
         )
     
-    # Save to database
     new_image = BoardImage(
         board_id=board_id,
         image_url=image_url,
@@ -203,8 +178,6 @@ def delete_image_from_board(
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
-    """Delete image from board"""
-    # Verify board belongs to user
     board = db.query(Board).filter(
         Board.id == board_id,
         Board.user_id == current_user.id
@@ -216,7 +189,6 @@ def delete_image_from_board(
             detail="Board not found"
         )
     
-    # Find image
     image = db.query(BoardImage).filter(
         BoardImage.id == image_id,
         BoardImage.board_id == board_id
@@ -228,9 +200,7 @@ def delete_image_from_board(
             detail="Image not found"
         )
     
-    # Delete from S3
     delete_image(image.filename)
     
-    # Delete from database
     db.delete(image)
     db.commit()

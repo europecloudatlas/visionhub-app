@@ -1,6 +1,3 @@
-"""
-Database connection and session management
-"""
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
@@ -8,28 +5,18 @@ from .config import get_settings
 
 settings = get_settings()
 
-# Create engine
 engine = create_engine(
     settings.database_url,
     pool_pre_ping=True,
     echo=settings.debug
 )
 
-# Session factory
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 # Base class for models
 Base = declarative_base()
 
 def get_db():
-    """
-    Database session dependency
-    
-    Usage:
-        @app.get("/")
-        def route(db: Session = Depends(get_db)):
-            ...
-    """
     db = SessionLocal()
     try:
         yield db
@@ -37,6 +24,5 @@ def get_db():
         db.close()
 
 def init_db():
-    """Initialize database (create tables)"""
     Base.metadata.create_all(bind=engine)
-    print("✅ Database initialized")
+    print(" Database initialized")

@@ -1,12 +1,7 @@
-"""
-Application configuration
-"""
 from pydantic_settings import BaseSettings
 from functools import lru_cache
 
-class Settings(BaseSettings):
-    """Application settings"""
-    
+class Settings(BaseSettings):    
     # App
     app_name: str = "VisionHub"
     debug: bool = True
@@ -20,10 +15,6 @@ class Settings(BaseSettings):
     # Database
     database_url: str = "postgresql://visionhub:visionhub123@localhost:5432/visionhub"
     
-    # Redis
-    redis_host: str = "localhost"
-    redis_port: int = 6379
-    
     # S3/MinIO
     s3_endpoint: str = "http://localhost:9000"
     s3_access_key: str = "minioadmin"
@@ -36,5 +27,4 @@ class Settings(BaseSettings):
 
 @lru_cache()
 def get_settings():
-    """Get cached settings instance"""
     return Settings()

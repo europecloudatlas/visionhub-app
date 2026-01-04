@@ -1,6 +1,3 @@
-"""
-SQLAlchemy database models
-"""
 from sqlalchemy import Column, Integer, String, Text, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
@@ -9,7 +6,6 @@ from .database import Base
 
 
 class User(Base):
-    """User model"""
     __tablename__ = "users"
     
     id = Column(Integer, primary_key=True, index=True)
@@ -18,7 +14,6 @@ class User(Base):
     hashed_password = Column(String(255), nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     
-    # Relationships
     boards = relationship("Board", back_populates="owner", cascade="all, delete-orphan")
     
     def __repr__(self):
@@ -26,7 +21,6 @@ class User(Base):
 
 
 class Board(Base):
-    """Vision Board model"""
     __tablename__ = "boards"
     
     id = Column(Integer, primary_key=True, index=True)
@@ -36,7 +30,6 @@ class Board(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
     
-    # Relationships
     owner = relationship("User", back_populates="boards")
     images = relationship("BoardImage", back_populates="board", cascade="all, delete-orphan")
     
@@ -45,7 +38,6 @@ class Board(Base):
 
 
 class BoardImage(Base):
-    """Board Image model"""
     __tablename__ = "board_images"
     
     id = Column(Integer, primary_key=True, index=True)
@@ -54,7 +46,6 @@ class BoardImage(Base):
     filename = Column(String(255), nullable=False)
     uploaded_at = Column(DateTime(timezone=True), server_default=func.now())
     
-    # Relationships
     board = relationship("Board", back_populates="images")
     
     def __repr__(self):
