@@ -1,7 +1,7 @@
 // Configuration
-const API_URL = window.location.hostname === 'localhost' 
-    ? 'http://localhost:8000' 
-    : '/api';  // Production: nginx will proxy /api to backend
+const API_URL = window.ENV?.API_URL || '/api';
+const ENVIRONMENT = window.ENV?.ENVIRONMENT || 'production';
+const VERSION = window.ENV?.VERSION || 'unknown';
 
 // State
 let currentUser = null;
