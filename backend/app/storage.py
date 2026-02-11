@@ -54,7 +54,7 @@ def upload_image(file, original_filename: str) -> tuple:
             }
         )
         
-        image_url = f"{settings.s3_url_for_images}/{settings.s3_bucket}/{filename}"
+        image_url = f"{settings.s3_url_for_images}/{filename}"
         
         print(f"Uploaded image: {filename}")
         return image_url, filename
